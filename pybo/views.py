@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 from .models import Question
+from .forms import QuestionForm
 
 # Create your views here.
 
@@ -31,3 +32,17 @@ def answer_create(request, question_id):
     '''
     
     return redirect('pybo:detail', question_id=question.id)
+
+def question_create(request):
+    
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.create_date = timezone.now()
+            question.save()
+        return redirect('pybo:detail', question_id = question.id)
+    else:
+        form = QuestionForm()
+    context = { 'form' : form }
+    return render(request, 'pybo/question_form.html', context)
