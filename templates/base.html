@@ -13,19 +13,26 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="{% static 'blog/blog.css' %}">
     <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-
     <title>{% block title %} {% endblock %}</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="/pybo/">파이보</a>
-            <a href="/blog/">블로그</a>
-        </nav>
-    </header>
+
+
+<!-- 네비게이션바 -->
+<header>
+    <div class="text-center header-font">
+        <h1>MySite</h1>
+    </div>
+    {% include 'navbar.html' %}
+</header>
 <!-- 기본 템플릿 안에 삽입될 내용 Start -->
 {% block content %}
 {% endblock %}
 <!-- 기본 템플릿 안에 삽입될 내용 End -->
+
+    <!-- jQuery JS -->
+    <script src="{% static 'jquery-3.4.1.min.js' %}"></script>
+    <!-- Bootstrap JS -->
+    <script src="{% static 'bootstrap.min.js' %}"></script>
 </body>
 </html>
