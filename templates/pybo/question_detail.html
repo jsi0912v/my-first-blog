@@ -1,8 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
 
+
+
 <div class="container my-3">
-    <h2 class="border-bottom py-2">{{ question.subject }}</h2>
+    <div class="nav justify-content-end">
+        <a class="btn btn-primary" href="{% url 'pybo:index' %}"> 목록 </a>
+    </div>
+    <div>
+        <h2 class="border-bottom py-2">{{ question.subject }}</h2>
+    </div>
     <div class="card my-3">
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
@@ -19,7 +26,7 @@
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;">{{ answer.content }}</div>
             <div class="d-flex justify-content-end">
-                <div class="badge badge-light text-muted p-2">
+                <div class="badge badge-light text-white p-2">
                     {{ answer.create_date }}
                 </div>
             </div>
@@ -28,10 +35,22 @@
     {% endfor %}
     <form action="{% url 'pybo:answer_create' question.id %}" method="post" class="my-3">
         {% csrf_token %}
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+        {% for field in form %}
+            {% if field.errors %}
+            <strong>{{ field.label }}</strong>
+            {{ field.errors }}
+            {% endif %}
+        {% endfor %}
+        </div>
+        {% endif %}
         <div class="form-group">
             <textarea name="content" id="content" class="form-control" rows="10"></textarea>
         </div>
-        <input type="submit" value="답변등록" class="btn btn-primary">
+        <div class="">
+            <input type="submit" value="답변등록" class="btn btn-primary">
+        <div>
     </form>
 </div>
 
