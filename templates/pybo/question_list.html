@@ -2,7 +2,11 @@
 
 {% block content %}
 
-    <div class="container my-3">
+<div class="container my-3">
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">새글쓰기</a>
+        </div>
+
         <table class="table">
             <thead>
             <tr class="thead-dark">
@@ -29,6 +33,67 @@
             {% endif %}
             </tbody>
         </table>
-        <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">새글쓰기</a>
+        <!-- 페이징처리 시작 -->
+        <ul class="pagination d-flex justify-content-center">
+            <!-- 처음페이지 -->
+            {% if question_list.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+            </li>
+            {% comment %} {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+            </li> {% endcomment %}
+            {% endif %}            
+            <!-- 이전페이지 -->
+            {% if question_list.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ question_list.previous_page_number }}" aria-label="Previous"><span aria-hidden="true">&lt;</span></a>
+            </li>
+            {% comment %} {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#" aria-label="Previous"><span aria-hidden="true">&lt;</span></a>
+            </li> {% endcomment %}
+            {% endif %}
+            <!-- 페이지리스트 -->
+            {% for page_number in question_list.paginator.page_range %}
+                {% if page_number >= question_list.number|add:-5 and page_number <= question_list.number|add:5 %}
+                    {% if page_number == question_list.number %}
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                    </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            <!-- 다음페이지 -->
+            {% if question_list.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ question_list.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&gt;</span></a>
+            </li>
+            {% comment %} {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#" aria-label="Next">
+                    <span aria-hidden="true">&gt;</span></a>
+            </li> {% endcomment %}
+            {% endif %}
+            <!-- 마지막페이지 -->
+            {% if question_list.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ question_list.paginator.num_pages }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span></a>
+            </li>
+            {% comment %} {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span></a>
+            </li> {% endcomment %}
+            {% endif %}
+        </ul>
+        <!-- 페이징처리 끝 -->
     </div>
 {% endblock %}
