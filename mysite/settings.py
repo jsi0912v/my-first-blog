@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'pybo.apps.PyboConfig',
     'common.apps.CommonConfig',
+    'main',
 ]
 
 MIDDLEWARE = [
