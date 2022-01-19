@@ -4,6 +4,15 @@
 
 
 <div class="container my-3">
+    <!-- 사용자오류 표시 -->
+    {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+    {% for message in messages %}
+        <strong>{{ message.tags }}</strong>
+        <ul><li>{{ message.message }}</li></ul>
+    {% endfor %}
+    </div>
+    {% endif %}
     <div class="nav justify-content-end">
         <a class="btn btn-primary" href="{% url 'pybo:index' %}"> 목록 </a>
     </div>
@@ -14,11 +23,26 @@
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
             <div class="d-flex justify-content-end">
+                {% if question.modify_date %}
+                <div class="badge badge-light p-2 text-left mx-3">
+                    <div class="mb-2">modified at</div>
+                    <div>{{ question.modify_date }}</div>
+                </div>
+                {% endif %}
                 <div class="badge badge-light text-white p-2 text-left">
                     <div class="mb-2">{{ question.author.username }}</div>
                     <div>{{ question.create_date }}</div>
                 </div>
             </div>
+            {% if request.user == question.author %}
+            <div class="my-3">
+                <a href="{% url 'pybo:question_modify' question.id  %}" 
+                   class="btn btn-sm btn-outline-secondary">수정</a>
+                <a href="{% url 'pybo:question_delete' question.id  %}" 
+                   class="btn btn-sm btn-outline-secondary" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+            </div>
+            
+            {% endif %}
         </div>
     </div>
     <h5 class="border-bottom my-3 py-2">{{question.answer_set.count}}개의 답변이 있습니다.</h5>
@@ -27,11 +51,25 @@
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;">{{ answer.content }}</div>
             <div class="d-flex justify-content-end">
+                {% if answer.modify_date %}
+                <div class="badge badge-light p-2 text-left mx-3">
+                    <div class="mb-2">modified at</div>
+                    <div>{{ answer.modify_date }}</div>
+                </div>
+                {% endif %}
                 <div class="badge badge-light text-white p-2">
                     <div class="mb-2">{{ question.author.username }}</div>
                     <div> {{ answer.create_date }} </div>
                 </div>
             </div>
+            {% if request.user == question.author %}
+            <div class="my-3">
+                <a href="{% url 'pybo:answer_modify' answer.id  %}" 
+                   class="btn btn-sm btn-outline-secondary">수정</a>
+                <a href="{% url 'pybo:answer_delete' answer.id  %}" 
+                   class="btn btn-sm btn-outline-secondary" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+            </div>
+            {% endif %}
         </div>
     </div>
     {% endfor %}
