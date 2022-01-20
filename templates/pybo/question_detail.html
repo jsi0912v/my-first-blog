@@ -38,8 +38,8 @@
             <div class="my-3">
                 <a href="{% url 'pybo:question_modify' question.id  %}" 
                    class="btn btn-sm btn-outline-secondary">수정</a>
-                <a href="{% url 'pybo:question_delete' question.id  %}" 
-                   class="btn btn-sm btn-outline-secondary" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+                <a href="#" data-object-id="{% url 'pybo:question_delete' question.id  %}" 
+                   class="btn btn-sm btn-outline-secondary delete" id="data-object" >삭제</a>
             </div>
             
             {% endif %}
@@ -66,8 +66,8 @@
             <div class="my-3">
                 <a href="{% url 'pybo:answer_modify' answer.id  %}" 
                    class="btn btn-sm btn-outline-secondary">수정</a>
-                <a href="{% url 'pybo:answer_delete' answer.id  %}" 
-                   class="btn btn-sm btn-outline-secondary" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+                <a href="#" data-object-id="{% url 'pybo:answer_delete' answer.id  %}" 
+                   class="btn btn-sm btn-outline-secondary delete" >삭제</a>
             </div>
             {% endif %}
         </div>
@@ -95,3 +95,30 @@
 </div>
 
 {% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+        // Javascript 삭제 구현.
+        var btnDelete = document.querySelectorAll(".delete");
+        btnDelete.forEach((del)=>{
+            del.addEventListener("click", click, false)
+
+            function click(e){
+                var ask = confirm("정말 삭제하시겠습니까?")
+                var action = del.getAttribute('data-object-id')
+                if (ask && action) {
+                    location.href=action
+                }
+                
+                return false;
+            }
+            });
+        {% comment %} var cols = document.querySelectorAll('#cols .btn'); 
+            [].forEach.call(cols,function(col){ 
+	        col.addEventListener("click",click,false); 
+            }); 
+            function click(e){ 
+	        alert("Click!") {% endcomment %}
+        
+    </script>
+{% endblock%}
