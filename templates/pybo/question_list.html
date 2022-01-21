@@ -12,6 +12,7 @@
             <thead>
             <tr class="text-center thead-dark">
                 <th class="text-center">번호</th>
+                <th class="text-center">추천</th>
                 <th class="text-center" style="width: 50%">제목</th>
                 <th class="text-center">작성자</th>
                 <th class="text-center">작성일시</th>
@@ -25,6 +26,13 @@
                     <!-- { question.id }} -->
                     <!-- 번호 = 전체개수 - 시작인덱스 - 현재인덱스 + 1 -->
                     {{ question_list.paginator.count|sub:question_list.start_index|sub:forloop.counter0|add:1 }}
+                </td>
+                <td>
+                    {% if question.voter.all.count > 0 %}
+                    <span class="badge badge-warning px-2 py-1">{{ question.voter.all.count }}</span>
+                    {% comment %} {% else %}
+                    <span class="badge badge-warning px-2 py-1"> 0 </span> {% endcomment %}
+                    {% endif %}
                 </td>
                 <td class="text-left">
                     <a style="text-decoration: none;" href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a>
