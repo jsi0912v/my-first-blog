@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404, resolve_url
 from django.utils import timezone
 from ..models import Answer, Question
 from ..forms import AnswerForm
@@ -17,7 +17,8 @@ def answer_create(request, question_id):
             answer.create_date=timezone.now()
             answer.question = question
             answer.save()
-            return redirect('pybo:detail', question_id=question.id)
+            print('{}#answer_{}'.format(resolve_url('pybo:detail', question_id=question.id), answer.id))
+            return redirect('{}#answer_{}'.format(resolve_url('pybo:detail', question_id=question.id), answer.id))
     else:
         form = AnswerForm()
     context = { 'question': question, 'form': form }
@@ -35,8 +36,6 @@ def answer_create(request, question_id):
     
     '''
 
-
-
 @login_required(login_url='common:login')
 def answer_modify(request, answer_id):
     answer = get_object_or_404(Answer, pk=answer_id)
@@ -50,7 +49,8 @@ def answer_modify(request, answer_id):
             answer = form.save(commit=False)
             answer.modify_date = timezone.now()
             answer.save()
-            return redirect( 'pybo:detail', question_id = answer.question.id )
+            print('{}#answer_{}'.format(resolve_url('pybo:detail', question_id = answer.question.id), answer.id))
+            return redirect( '{}#answer_{}'.format(resolve_url('pybo:detail', question_id = answer.question.id), answer.id) )
     else:
         form = AnswerForm(instance = answer) ## instance는 기본 입력 값을 전달.
     context = { 'answer': answer, 'form': form }
