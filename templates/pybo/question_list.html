@@ -4,12 +4,19 @@
 {% block content %}
 
 <div class="container my-3">
-    <div class="row justify-content-end my-3">
-        <div class="col-4 input-group">
+    <!-- 양쪽정렬 justify-content-between로 변경 -->
+
+    <div class="d-flex justify-content-between  my-2">
+        <div class="p-2 flex-grow-1">
+            <select class="form-select form-select text-center so">
+                <option value="recent" {% if so == 'recent' %}selected{% endif %}>최신순</option>
+                <option value="recommend" {% if so == 'recommend' %}selected{% endif %}>추천순</option>
+                <option value="popular" {% if so == 'popular' %}selected{% endif %}>인기순</option>
+            </select>
+        </div>
+        <div class="input-group p-2">
             <input type="text" class="form-control kw" value="{{ kw|default_if_none:'' }}">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
-            </div>
+            <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
         </div>
     </div>
         <div class="d-flex justify-content-end">
@@ -125,6 +132,7 @@
     <form id="searchForm" method="get" action="{% url 'pybo:index' %}">
         <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
         <input type="hidden" id="page" name="page" value="{{ page }}">
+        <input type="hidden" id="so" name="so" value="{{ so }}">
     </form>
 {% endblock %}
 
@@ -137,41 +145,38 @@
     var pageLink = document.querySelectorAll(".page-link");
 
     pageLink.forEach((page) => {
-        page.addEventListener('click', paging, false)
-
-        function paging(e){
-            document.getElementById('page').value = page.getAttribute('data-page');
-            document.getElementById('searchForm').submit();
-        }
+        page.addEventListener('click', (e)=>{
+                document.getElementById('page').value = page.getAttribute('data-page');
+                document.getElementById('searchForm').submit();
+        })
     })
 
     var search = document.querySelector("#btn_search");
 
-    search.addEventListener('click', doSearch, false)
-
-    function doSearch(e){
-        
-        var kw = document.getElementById('kw')
-        console.log(document.getElementsByClassName('kw').value)
-        kw.vlaue = document.getElementsByClassName('kw').value
-        console.log(kw)
-        document.getElementById('page').value = 1
+    search.addEventListener('click', (e)=>{
+        var kw = document.getElementById('kw');
+        console.log(document.getElementById('kw'));
+        var cKw = document.getElementsByClassName('kw')[0];
+        console.log(cKw.value);
+        kw.value = cKw.value;
+        document.getElementById('page').value = 1;
         document.getElementById('searchForm').submit();
-    }
+    })
 
-    {% comment %} $(document).ready(function(){
-        $(".page-link").on('click', function() {
-            $("#page").val($(this).data("page"));
-            $("#searchForm").submit();
-        });
-    
-        $("#btn_search").on('click', function() {
-            $("#kw").val($(".kw").val());
-            $("#page").val(1);  // 검색버튼을 클릭할 경우 1페이지부터 조회한다.
-            $("#searchForm").submit();
-        });
+    var sortOption = document.getElementsByClassName('so')[0];
+    sortOption.addEventListener('change', (e)=>{
+        var so = document.getElementById('so');
+        so.value = sortOption.value;
+        document.getElementById('page').value = 1;
+        document.getElementById('searchForm').submit();
+    }, false)
+
+    {% comment %} $(".so").on('change', function() {
+        $("#so").val($(this).val());
+        $("#page").val(1);
+        $("#searchForm").submit();
     }); {% endcomment %}
-    console.log(document.getElementsByClassName('kw').value)
+
     </script>
 
 
